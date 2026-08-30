@@ -1,0 +1,21 @@
+# Maven
+target/
+
+# IntelliJ IDEA
+.idea/
+*.iml
+
+# Eclipse
+.classpath
+.project
+.settings/
+
+# VS Code
+.vscode/
+
+# Local database
+*.db
+
+# Environment / secrets
+.env
+.env.*
