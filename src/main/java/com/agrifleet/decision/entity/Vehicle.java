@@ -6,14 +6,14 @@ public class Vehicle {
     private long vehicleId;
     private long ownerId;
     private String vehicleType;
-    private JsonNode specs;      // parsed from the `specs` JSON column
-    private JsonNode pricing;    // parsed from the `pricing` JSON column
+    private JsonNode specs;      
+    private JsonNode pricing;    
     private double rating;
     private double currentLat;
     private double currentLng;
     private String availabilityStatus;
 
-    // ---- convenience accessors for the fields TOPSIS actually needs ----
+   
 
     public double hourlyRate() {
         return pricing != null && pricing.has("hourly_rate") ? pricing.get("hourly_rate").asDouble() : 0.0;
@@ -23,7 +23,6 @@ public class Vehicle {
         return specs != null && specs.has("hp") ? specs.get("hp").asInt() : 0;
     }
 
-    // ---- getters / setters ----
 
     public long getVehicleId() { return vehicleId; }
     public void setVehicleId(long vehicleId) { this.vehicleId = vehicleId; }

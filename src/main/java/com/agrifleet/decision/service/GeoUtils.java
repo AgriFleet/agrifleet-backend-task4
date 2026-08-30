@@ -7,7 +7,6 @@ public final class GeoUtils {
     private GeoUtils() {
     }
 
-    /** Great-circle distance between two lat/lng points, in kilometers. */
     public static double haversineKm(double lat1, double lng1, double lat2, double lng2) {
         double dLat = Math.toRadians(lat2 - lat1);
         double dLng = Math.toRadians(lng2 - lng1);

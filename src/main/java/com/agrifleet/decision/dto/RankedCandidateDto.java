@@ -1,6 +1,5 @@
 package com.agrifleet.decision.dto;
 
-/** Immutable record representing one ranked vehicle candidate. */
 public record RankedCandidateDto(
         long vehicleId,
         String vehicleType,
