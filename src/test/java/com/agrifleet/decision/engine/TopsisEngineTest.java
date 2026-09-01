@@ -8,21 +8,21 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class TopsisEngineTest {
 
-    /**
-     * Uses the 4 candidates from the coursework's seed data (vehicles 1, 2, 3, 8
-     * from the SQL script) but asserts against a HAND-VERIFIED TOPSIS result,
-     * not the ranked_fleet_candidates seed rows themselves.
-     *
-     * IMPORTANT: the seed data's own closeness scores (C=0.676 for vehicle 1,
-     * C=0.551 for vehicle 8, C=0.342 for vehicle 3 - implying order 2,1,8,3)
-     * do NOT match what the TOPSIS formula actually produces for these inputs.
-     * Manually recomputing normalization -> weighting -> A+/A- -> separation
-     * gives C(2)=0.713, C(1)=0.511, C(3)=0.406, C(8)=0.367 - i.e. vehicle 3
-     * (cheapest at $95/hr, cost carries the highest weight at 0.35) actually
-     * outranks vehicle 8 despite worse horsepower/rating. The seed script's
-     * numbers are illustrative placeholders, not a verified ground truth -
-     * flag this in Chapter 8 if you cite the seed data anywhere, and use the
-     * numbers below (or your own hand calculation) as the authoritative check.
+    /*
+      Uses the 4 candidates from the coursework's seed data (vehicles 1, 2, 3, 8
+      from the SQL script) but asserts against a HAND-VERIFIED TOPSIS result,
+      not the ranked_fleet_candidates seed rows themselves.
+
+      IMPORTANT: the seed data's own closeness scores (C=0.676 for vehicle 1,
+      C=0.551 for vehicle 8, C=0.342 for vehicle 3 - implying order 2,1,8,3)
+      do NOT match what the TOPSIS formula actually produces for these inputs.
+      Manually recomputing normalization -> weighting -> A+/A- -> separation
+      gives C(2)=0.713, C(1)=0.511, C(3)=0.406, C(8)=0.367 - i.e. vehicle 3
+      (cheapest at $95/hr, cost carries the highest weight at 0.35) actually
+      outranks vehicle 8 despite worse horsepower/rating. The seed script's
+      numbers are illustrative placeholders, not a verified ground truth -
+      flag this in Chapter 8 if you cite the seed data anywhere, and use the
+      numbers below (or your own hand calculation) as the authoritative check.
      */
     @Test
     void ranksSeedDataInExpectedOrder() {
@@ -83,11 +83,11 @@ class TopsisEngineTest {
         assertEquals(1, result.scores().get(0).rank());
     }
 
-    /**
-     * Not a strict assertion test - prints timing for M = 20..2000 alternatives
-     * as suggested by the coursework's Chapter 8 experimental table
-     * ("Candidate Machines M in [20, 2000], Linear O(M * N)").
-     * Run manually and paste the output into your report's benchmark table/chart.
+    /*
+      Not a strict assertion test - prints timing for M = 20..2000 alternatives
+      as suggested by the coursework's Chapter 8 experimental table
+      ("Candidate Machines M in [20, 2000], Linear O(M * N)").
+      Run manually and paste the output into your report's benchmark table/chart.
      */
     @Test
     void benchmarkAcrossInputSizes() {
