@@ -3,42 +3,71 @@ package com.agrifleet.decision.controller;
 import com.agrifleet.decision.dto.RankRequestDto;
 import com.agrifleet.decision.dto.RankingResponseDto;
 import com.agrifleet.decision.dto.RiskPredictionResponseDto;
+import com.agrifleet.decision.repository.DecisionRunRepository;
+import com.agrifleet.decision.repository.HarvestDelayPredictionRepository;
 import com.agrifleet.decision.service.DecisionService;
 import com.agrifleet.decision.service.RiskPredictionService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Map;
+
 @RestController
-@RequestMapping("/api/decision")
-@CrossOrigin(origins = "*") // tighten to the React dev server origin before deployment
+@RequestMapping("/decision")
+@CrossOrigin(origins = "*")
 public class DecisionController {
 
     private final DecisionService decisionService;
     private final RiskPredictionService riskPredictionService;
+    private final DecisionRunRepository decisionRunRepository;
+    private final HarvestDelayPredictionRepository predictionRepository;
 
-    public DecisionController(DecisionService decisionService, RiskPredictionService riskPredictionService) {
+    public DecisionController(
+            DecisionService decisionService,
+            RiskPredictionService riskPredictionService,
+            DecisionRunRepository decisionRunRepository,
+            HarvestDelayPredictionRepository predictionRepository) {
+
         this.decisionService = decisionService;
         this.riskPredictionService = riskPredictionService;
+        this.decisionRunRepository = decisionRunRepository;
+        this.predictionRepository = predictionRepository;
     }
 
-    /*
-      Ranks available, crop-compatible machinery for a booking using TOPSIS,
-      with farmer-supplied preference weights.
-     */
-    @PostMapping("/rank/{bookingId}")
-    public RankingResponseDto rankVehicles(@PathVariable long bookingId, @Valid @RequestBody RankRequestDto request) {
-        return decisionService.rankVehiclesForBooking(bookingId, request);
+    @PostMapping("/decision-se/topsis/rank")
+    public RankingResponseDto rankVehicles(
+            @RequestParam long bookingId,
+            @Valid @RequestBody RankRequestDto request) {
+
+        return decisionService.rankVehiclesForBooking(
+                bookingId,
+                request
+        );
     }
 
-    /*
-      Predicts the harvest delay risk tier for a booking using the decision-tree model.
-      rainProbability and breakdownHistory are optional; sensible defaults are used if omitted.
-     */
-    @PostMapping("/risk/{bookingId}")
-    public RiskPredictionResponseDto predictRisk(
-            @PathVariable long bookingId,
-            @RequestParam(defaultValue = "0.3") double rainProbability,
-            @RequestParam(defaultValue = "0") int breakdownHistory) {
-        return riskPredictionService.predictAndPersist(bookingId, rainProbability, breakdownHistory);
+    @GetMapping("/decision/topsis/runs")
+    public List<Map<String, Object>> getTopsisRuns() {
+        return decisionRunRepository.findAllRuns();
+    }
+
+
+    @GetMapping("/decision/topsis/candidates")
+    public List<Map<String, Object>> getRankedCandidates(
+            @RequestParam long runId) {
+
+        return decisionRunRepository.findCandidatesByRunId(runId);
+    }
+
+    @PostMapping("/decision/delays/predict")
+    public RiskPredictionResponseDto predictHarvestDelay(
+            @RequestParam long bookingId) {
+
+        return riskPredictionService.predictFromStoredData(bookingId);
+    }
+
+    @GetMapping("/decision/delays/history")
+    public List<Map<String, Object>> getDelayHistory() {
+        return predictionRepository.findAll();
     }
 }
