@@ -15,7 +15,7 @@
     <artifactId>decision-service</artifactId>
     <version>1.0.0</version>
     <name>decision-service</name>
-    <description>Task 4: Intelligent Decision Module (TOPSIS & Risk Prediction)</description>
+    <description>Task 4: Intelligent Decision Module (TOPSIS &amp; Risk Prediction)</description>
 
     <properties>
         <java.version>17</java.version>
